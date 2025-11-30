@@ -1,32 +1,21 @@
 #!/bin/bash
-# ============================================
-# Complete PostgreSQL Database Sync Script - PRODUCTION PERFECTION
-# Features: 
-#   - HIGH VISIBILITY Phase Headers
-#   - Auto-Clear Terminal & Config Summary
-#   - Graceful Cancellation & Robust Cleanup
-# ============================================
 
 # Exit on undefined variables and pipe failures.
 set -uo pipefail
 
-# ---------------------------
-# 1. Configuration
-# ---------------------------
-
 # Source Database (MAIN)
-MAIN_DB_HOST="${MAIN_DB_HOST:-localhost}"
-MAIN_DB_PORT="${MAIN_DB_PORT:-5432}"
-MAIN_DB_USER="${MAIN_DB_USER:-postgres}"
-MAIN_DB_PASS="${MAIN_DB_PASSWORD:-0206}" 
-MAIN_DB_NAME="${MAIN_DB_NAME:-terotam_local}"
+MAIN_DB_HOST="localhost"
+MAIN_DB_PORT="5432"
+MAIN_DB_USER="postgres"
+MAIN_DB_PASS="0206" 
+MAIN_DB_NAME="Main_DB"
 
 # Target Database (ARCHIVE)
-ARCHIVE_DB_HOST="${ARCHIVE_DB_HOST:-localhost}"
-ARCHIVE_DB_PORT="${ARCHIVE_DB_PORT:-5432}"
-ARCHIVE_DB_USER="${ARCHIVE_DB_USER:-postgres}"
-ARCHIVE_DB_PASS="${ARCHIVE_DB_PASSWORD:-0206}"
-ARCHIVE_DB_NAME="${ARCHIVE_DB_NAME:-0830tero_archive}"
+ARCHIVE_DB_HOST="localhost"
+ARCHIVE_DB_PORT="5432"
+ARCHIVE_DB_USER="postgres"
+ARCHIVE_DB_PASS="0206"
+ARCHIVE_DB_NAME="Archive_DB"
 
 # Performance & Batching
 RETRY_COUNT=3
@@ -50,42 +39,17 @@ SHUTDOWN_TRIGGERED=0
 # 2. Core Tables List
 # ---------------------------
 CORE_TABLES=(
-    "become_partner" "customer_bound_vendors" "customer_contract" "customer_outlets"
-    "customer_outlet_equipment" "default_access_control" "default_countries" "departments"
-    "email_preference" "guest_locations" "jwt_token_block" "master_contract"
-    "master_users" "login_session" "migrations" "modules"
-    "outlet_areas" "outlet_group_binding" "outlet_additional_info" "outlet_group"
-    "zone_city" "roles" "custom_module_equipment_map" "staff_tracking_map"
-    "sms_preference" "static_default_cities" "smtp_config" "support"
-    "support_issues_history" "support_issues" "support_setting" "support_issues_titles"
-    "token_approval" "typeorm_metadata" "vendor_jwt_token_block" "vendor_contract"
-    "vendor_employe_preferences" "whatsapp_config" "vendors" "vendor_outlets"
-    "web_request" "vendor_zone_city" "vendor_staff_tracking" "zones"
-    "vendor_zones" "customer_employee" "notification_prefrence" "access_control"
-    "vendor_employee" "support_feedback" "default_cities" "default_zones"
-    "guest_employee" "service_types" "geo_location_preferences" "department_subscription"
-    "staff_additional_info" "vendor_employee_binding" "vendor_customer_requests" "support_issues_attachments"
-    "asset_multi_flow" "dashboard_charts_subs" "customer_employee_binding" "customer"
-    "customer_preference" "asset_attachment" "asset_history" "asset_depreciation"
-    "asset_outlet_history" "asset_remarks" "assets_service_preferences" "assets_tat"
-    "asset_status" "asset_type_depreciation" "config_asset_alert" "custom_modules"
-    "customer_asset_preference" "equipments_brands" "equipments_sr_no" "nature_of_titles"
-    "sub_modules" "sub_module_data" "asset_reminder" "assets_manual"
-    "custom_module_data" "default_gm_custom_labels" "default_gm_assets" "gm_assets"
-    "gm_config" "gm_default_checklist" "gm_preferences" "gm_frequency"
-    "gm_schedule_assets" "gm_scheduler" "wp_preference" "workflow_report_forms"
-    "complaint_relation_forms" "complaint_relation_forms_data" "complaints_invoice"
-    "complaints_invoice_order_item" "expense_location_asset" "invoice_comments"
-    "ratecard_comments" "rating_feedback" "rating_feedback_history" "vendor_complain_ratecard"
-    "customer_ratecard" "customer_ratecard_category" "customer_ratecard_item" "complain_forms"
-    "complain_logs" "complain_preferences" "complain_priorities" "complain_service_types"
-    "complain_status_messages" "complain_workflow_preferences" "complain_customer_preference" "complain_dynamic_forms"
-    "complaint_relations" "default_invoice_fields" "default_pm_assets" "pm_assets"
-    "pm_config" "pm_default_checklist" "pm_preferences" "pm_frequncy"
-    "pm_schedule_assets" "sca_audit_parent_category" "sca_audit_category" "sca_audit_item"
-    "sca_audit_item_attachment" "sca_audit_frequency" "sca_audit_scheduler" "sca_finance_forms"
-    "sca_stock_forms" "sca_preference" "sca_audit_condition" "sca_audit_priority"
-    "performance_rating"
+    "customers" 
+    "become_partner" 
+    "customer_bound_vendors" 
+    "customer_outlets"
+    "customer_outlet_equipment" 
+    "default_access_control" 
+    "default_countries" 
+    "departments"
+    "email_preference" 
+
+    # Give All Table Names
 )
 
 # ---------------------------
@@ -172,9 +136,6 @@ cleanup() {
 
 trap cleanup EXIT INT TERM
 
-# ---------------------------
-# 4. Helper Functions
-# ---------------------------
 
 run_with_retry() {
     local cmd="$1"
@@ -335,9 +296,6 @@ run_parallel_jobs() {
     return 0
 }
 
-# ---------------------------
-# 5. Main Execution Flow
-# ---------------------------
 
 pre_cleanup
 print_config
